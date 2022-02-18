@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjpower.springboot.dao.ZjStudentClassMapper">
+    <resultMap id="BaseResultMap" type="com.zjpower.springboot.entity.ZjStudentClass">
+        <!--@mbg.generated-->
+        <!--@Table zj_student_class-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="class_name" jdbcType="VARCHAR" property="className"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, class_name, created_at, updated_at
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from zj_student_class
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from zj_student_class
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zjpower.springboot.entity.ZjStudentClass"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into zj_student_class (class_name, created_at, updated_at
+        )
+        values (#{className,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zjpower.springboot.entity.ZjStudentClass" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into zj_student_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className != null">
+                class_name,
+            </if>
+            <if test="createdAt != null">
+                created_at,
+            </if>
+            <if test="updatedAt != null">
+                updated_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="className != null">
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="createdAt != null">
+                #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedAt != null">
+                #{updatedAt,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zjpower.springboot.entity.ZjStudentClass">
+        <!--@mbg.generated-->
+        update zj_student_class
+        <set>
+            <if test="className != null">
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zjpower.springboot.entity.ZjStudentClass">
+        <!--@mbg.generated-->
+        update zj_student_class
+        set class_name = #{className,jdbcType=VARCHAR},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="selectByClassName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from zj_student_class
+        where class_name = #{className,jdbcType=VARCHAR}
+    </select>
+</mapper>
