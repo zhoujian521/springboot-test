@@ -15,7 +15,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] addPathPatterns = {
-                "/lanjie/**"
+                "/lanjie/abc"
         };
         String[] excludePathPatterns = {
                 "/lanjie/randomAdd"

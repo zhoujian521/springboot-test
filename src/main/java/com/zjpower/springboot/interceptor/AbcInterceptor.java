@@ -8,19 +8,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Component
 public class AbcInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("这是拦截器-pre");
-        if (request.getRequestURI().contains("/abc")) {
+        if (!Objects.isNull(request.getHeader("abc"))) {
             return true;
         }
         response.setContentType("text/JavaScript; charset=utf-8");
         JSONObject res = new JSONObject();
         res.put("code", "-1004");
-        res.put("msg", "路由中需要包含 /abc");
+        res.put("msg", "header 需要包含 key:abc");
         response.getWriter().write(res.toJSONString());
         return false;
     }

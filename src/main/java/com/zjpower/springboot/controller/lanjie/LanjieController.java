@@ -10,7 +10,7 @@ public class LanjieController {
     @GetMapping(value = "/lanjie/abc")
     public ResultDto lanjieTest() {
         ResultDto result = new ResultDto();
-        result.setData("路由中包含 /abc");
+        result.setData("路由中包含 /abc && header中包含 key:abc");
         return result;
     }
 }
