@@ -80,4 +80,32 @@ public class StudentServiceImpl implements StudentService {
         result.setMsg("批量插入学员成功");
         return result;
     }
+
+    @Override
+    public ResultDto uodateStuClass(Integer stuId, Integer oriClassId, Integer preClassId) {
+        // bug 学生可能不在原班级 ？？？
+        ResultDto result = new ResultDto();
+        ZjStudent student = zjStudentMapper.selectByPrimaryKey(stuId);
+        if (Objects.isNull(student)) {
+            result.setCode(-1014);
+            result.setMsg("学员数据库中不存在");
+            return result;
+        }
+        if (student.getClassId().intValue() == preClassId.intValue()) {
+            result.setCode(-1015);
+            result.setMsg("该学员已经在该班级了 还更新个锤子");
+            return result;
+        }
+        ZjStudentClass oriClass = zjStudentClassMapper.selectByPrimaryKey(oriClassId);
+        ZjStudentClass preClass = zjStudentClassMapper.selectByPrimaryKey(preClassId);
+        if (Objects.isNull(oriClass) || Objects.isNull(preClass)) {
+            result.setCode(-1013);
+            result.setMsg("两个班级数据库中不存在");
+            return result;
+        }
+        student.setClassId(preClassId);
+        int res = zjStudentMapper.updateByPrimaryKeySelective(student);
+        result.setData(res);
+        return result;
+    }
 }

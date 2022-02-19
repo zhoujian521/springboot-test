@@ -6,4 +6,6 @@ public interface StudentService {
     ResultDto insertStu(Integer classId, String className, String stuName);
 
     ResultDto batchInsertStu(Integer count);
+
+    ResultDto uodateStuClass(Integer stuId, Integer oriClassId, Integer preClassId);
 }

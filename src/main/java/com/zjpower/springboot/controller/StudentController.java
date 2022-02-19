@@ -36,6 +36,23 @@ public class StudentController {
         return res;
     }
 
+    @PostMapping("/student/updateClass")
+    public ResultDto uodateStuClass(Integer stuId, Integer oriClassId, Integer preClassId) {
+        ResultDto result = new ResultDto();
+        if (Objects.isNull(stuId) || Objects.isNull(oriClassId) || Objects.isNull(preClassId)) {
+            result.setCode(-1011);
+            result.setMsg("三个参数不可以为空");
+            return result;
+        }
+        if (preClassId.intValue() == oriClassId.intValue()) {
+            result.setCode(-1012);
+            result.setMsg("两个班级的Id不能一样");
+            return result;
+        }
+        ResultDto res = studentService.uodateStuClass(stuId, oriClassId, preClassId);
+        return res;
+    }
+
 
 
 
