@@ -90,4 +90,9 @@
         from zj_student_class
         where class_name = #{className,jdbcType=VARCHAR}
     </select>
+    <select id="selectAllClass" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from zj_student_class
+    </select>
 </mapper>

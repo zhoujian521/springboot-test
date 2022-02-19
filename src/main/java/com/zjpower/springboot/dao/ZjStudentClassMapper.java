@@ -3,6 +3,8 @@ package com.zjpower.springboot.dao;
 import com.zjpower.springboot.entity.ZjStudentClass;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface ZjStudentClassMapper {
     /**
      * delete by primary key
@@ -52,4 +54,6 @@ public interface ZjStudentClassMapper {
      * @return
      */
     ZjStudentClass selectByClassName(@Param("className") String name);
+
+    List<ZjStudentClass> selectAllClass();
 }

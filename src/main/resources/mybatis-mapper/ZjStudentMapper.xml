@@ -102,4 +102,11 @@
         where class_id = #{classId,jdbcType=INTEGER}
         and student_name = #{stuName, jdbcType=VARCHAR}
     </select>
+    <insert id="batchInsertStudents">
+        insert into zj_student (student_name, class_id)
+        values
+        <foreach collection="students" item="student" separator=",">
+            (#{student.studentName,jdbcType=VARCHAR}, #{student.classId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
 </mapper>

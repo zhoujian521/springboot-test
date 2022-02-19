@@ -10,6 +10,7 @@ import java.util.List;
 public interface ZjStudentMapper {
     /**
      * delete by primary key
+     *
      * @param id primaryKey
      * @return deleteCount
      */
@@ -17,6 +18,7 @@ public interface ZjStudentMapper {
 
     /**
      * insert record to table
+     *
      * @param record the record
      * @return insert count
      */
@@ -24,6 +26,7 @@ public interface ZjStudentMapper {
 
     /**
      * insert record to table selective
+     *
      * @param record the record
      * @return insert count
      */
@@ -31,6 +34,7 @@ public interface ZjStudentMapper {
 
     /**
      * select by primary key
+     *
      * @param id primary key
      * @return object by primary key
      */
@@ -38,6 +42,7 @@ public interface ZjStudentMapper {
 
     /**
      * update record selective
+     *
      * @param record the updated record
      * @return update count
      */
@@ -45,6 +50,7 @@ public interface ZjStudentMapper {
 
     /**
      * update record
+     *
      * @param record the updated record
      * @return update count
      */
@@ -52,9 +58,18 @@ public interface ZjStudentMapper {
 
     /**
      * 根据班级Id && 学生名称 查询学生
+     *
      * @param classId
      * @param stuName
      * @return
      */
     List<ZjStudent> selectByClassIdAndStuName(@Param("classId") Integer classId, @Param("stuName") String stuName);
+
+    /**
+     * 批量插入学员
+     *
+     * @param students
+     * @return
+     */
+    int batchInsertStudents(@Param("students") List<ZjStudent> students);
 }
