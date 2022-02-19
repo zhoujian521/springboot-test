@@ -109,4 +109,9 @@
             (#{student.studentName,jdbcType=VARCHAR}, #{student.classId,jdbcType=INTEGER})
         </foreach>
     </insert>
+    <select id="selectAllStudent" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from zj_student
+    </select>
 </mapper>

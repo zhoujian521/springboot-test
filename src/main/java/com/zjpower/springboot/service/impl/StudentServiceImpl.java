@@ -1,14 +1,19 @@
 package com.zjpower.springboot.service.impl;
 
 import com.zjpower.springboot.dao.ZjStudentClassMapper;
+import com.zjpower.springboot.dao.ZjStudentGradesMapper;
 import com.zjpower.springboot.dao.ZjStudentMapper;
+import com.zjpower.springboot.dao.ZjStudentSubjectMapper;
 import com.zjpower.springboot.dto.ResultDto;
 import com.zjpower.springboot.entity.ZjStudent;
 import com.zjpower.springboot.entity.ZjStudentClass;
+import com.zjpower.springboot.entity.ZjStudentGrades;
+import com.zjpower.springboot.entity.ZjStudentSubject;
 import com.zjpower.springboot.service.StudentService;
 import com.zjpower.springboot.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +26,13 @@ public class StudentServiceImpl implements StudentService {
     ZjStudentMapper zjStudentMapper;
     @Autowired
     ZjStudentClassMapper zjStudentClassMapper;
+    @Autowired
+    ZjStudentSubjectMapper subjectMapper;
+    @Autowired
+    ZjStudentGradesMapper gradesMapper;
 
     @Override
+    @Transactional
     public ResultDto insertStu(Integer classId, String className, String stuName) {
         // 根据 classId || className => class
         ZjStudentClass stuClass = null;
@@ -56,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public ResultDto batchInsertStu(Integer total) {
         List<ZjStudent> students = new ArrayList<>();
         List<ZjStudentClass> classes = zjStudentClassMapper.selectAllClass();
@@ -82,6 +93,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public ResultDto uodateStuClass(Integer stuId, Integer oriClassId, Integer preClassId) {
         // bug 学生可能不在原班级 ？？？
         ResultDto result = new ResultDto();
@@ -105,6 +117,30 @@ public class StudentServiceImpl implements StudentService {
         }
         student.setClassId(preClassId);
         int res = zjStudentMapper.updateByPrimaryKeySelective(student);
+        result.setData(res);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public ResultDto batchInsertGrade(Integer examId) {
+        List<ZjStudent> students = zjStudentMapper.selectAllStudent();
+        List<ZjStudentSubject> subjects = subjectMapper.selectAllSubject();
+        List<ZjStudentGrades> grades = new ArrayList<>();
+        Random random = new Random();
+        for (ZjStudent stu : students) {
+            for (ZjStudentSubject sub : subjects) {
+                Double grade = random.nextInt(10000) / 100.0;
+                ZjStudentGrades zjGrade = new ZjStudentGrades();
+                zjGrade.setStudentId(stu.getId());
+                zjGrade.setExamId(examId);
+                zjGrade.setSubjectId(sub.getId());
+                zjGrade.setGrades(grade);
+                grades.add(zjGrade);
+            }
+        }
+        int res = gradesMapper.batchInsertOrUpdateGrade(grades);
+        ResultDto result = new ResultDto();
         result.setData(res);
         return result;
     }

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjpower.springboot.dao.ZjStudentGradesMapper">
+    <resultMap id="BaseResultMap" type="com.zjpower.springboot.entity.ZjStudentGrades">
+        <!--@mbg.generated-->
+        <!--@Table zj_student_grades-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="student_id" jdbcType="INTEGER" property="studentId"/>
+        <result column="exam_id" jdbcType="INTEGER" property="examId"/>
+        <result column="subject_id" jdbcType="INTEGER" property="subjectId"/>
+        <result column="grades" jdbcType="DOUBLE" property="grades"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, student_id, exam_id, subject_id, grades, created_at, updated_at
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from zj_student_grades
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete from zj_student_grades
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.zjpower.springboot.entity.ZjStudentGrades"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into zj_student_grades (student_id, exam_id, subject_id,
+        grades, created_at, updated_at
+        )
+        values (#{studentId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{subjectId,jdbcType=INTEGER},
+        #{grades,jdbcType=DOUBLE}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.zjpower.springboot.entity.ZjStudentGrades" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into zj_student_grades
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">
+                student_id,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="subjectId != null">
+                subject_id,
+            </if>
+            <if test="grades != null">
+                grades,
+            </if>
+            <if test="createdAt != null">
+                created_at,
+            </if>
+            <if test="updatedAt != null">
+                updated_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">
+                #{studentId,jdbcType=INTEGER},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="subjectId != null">
+                #{subjectId,jdbcType=INTEGER},
+            </if>
+            <if test="grades != null">
+                #{grades,jdbcType=DOUBLE},
+            </if>
+            <if test="createdAt != null">
+                #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedAt != null">
+                #{updatedAt,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zjpower.springboot.entity.ZjStudentGrades">
+        <!--@mbg.generated-->
+        update zj_student_grades
+        <set>
+            <if test="studentId != null">
+                student_id = #{studentId,jdbcType=INTEGER},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="subjectId != null">
+                subject_id = #{subjectId,jdbcType=INTEGER},
+            </if>
+            <if test="grades != null">
+                grades = #{grades,jdbcType=DOUBLE},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zjpower.springboot.entity.ZjStudentGrades">
+        <!--@mbg.generated-->
+        update zj_student_grades
+        set student_id = #{studentId,jdbcType=INTEGER},
+        exam_id = #{examId,jdbcType=INTEGER},
+        subject_id = #{subjectId,jdbcType=INTEGER},
+        grades = #{grades,jdbcType=DOUBLE},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <insert id="batchInsertOrUpdateGrade">
+        insert into zj_student_grades (student_id, exam_id, subject_id, grades)
+        values
+        <foreach collection="gradesList" item="item" index="index" separator=",">
+            (#{item.studentId,jdbcType=INTEGER}, #{item.examId, jdbcType=INTEGER}, #{item.subjectId,jdbcType=INTEGER},
+            #{item.grades,jdbcType=DOUBLE})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        student_id = values(student_id),
+        exam_id = values(exam_id),
+        subject_id = values(subject_id),
+        grades = values(grades)
+    </insert>
+</mapper>

@@ -1,11 +1,11 @@
 package com.zjpower.springboot.dao;
 
-import com.zjpower.springboot.entity.ZjStudentClass;
+import com.zjpower.springboot.entity.ZjStudentGrades;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface ZjStudentClassMapper {
+public interface ZjStudentGradesMapper {
     /**
      * delete by primary key
      * @param id primaryKey
@@ -18,46 +18,42 @@ public interface ZjStudentClassMapper {
      * @param record the record
      * @return insert count
      */
-    int insert(ZjStudentClass record);
+    int insert(ZjStudentGrades record);
 
     /**
      * insert record to table selective
      * @param record the record
      * @return insert count
      */
-    int insertSelective(ZjStudentClass record);
+    int insertSelective(ZjStudentGrades record);
 
     /**
      * select by primary key
      * @param id primary key
      * @return object by primary key
      */
-    ZjStudentClass selectByPrimaryKey(Integer id);
+    ZjStudentGrades selectByPrimaryKey(Integer id);
 
     /**
      * update record selective
      * @param record the updated record
      * @return update count
      */
-    int updateByPrimaryKeySelective(ZjStudentClass record);
+    int updateByPrimaryKeySelective(ZjStudentGrades record);
 
     /**
      * update record
      * @param record the updated record
      * @return update count
      */
-    int updateByPrimaryKey(ZjStudentClass record);
+    int updateByPrimaryKey(ZjStudentGrades record);
 
     /**
-     * 根据班级名称查询班级信息
-     * @param name
+     * 批量存在即更新 不存在即插入
+     * @param grades
      * @return
      */
-    ZjStudentClass selectByClassName(@Param("className") String name);
+    int batchInsertOrUpdateGrade(@Param("gradesList") List<ZjStudentGrades> grades);
 
-    /**
-     * 查询所有班级
-     * @return
-     */
-    List<ZjStudentClass> selectAllClass();
+
 }

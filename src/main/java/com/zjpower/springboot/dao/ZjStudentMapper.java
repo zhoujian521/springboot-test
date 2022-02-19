@@ -72,4 +72,10 @@ public interface ZjStudentMapper {
      * @return
      */
     int batchInsertStudents(@Param("students") List<ZjStudent> students);
+
+    /**
+     * 查询所有的学生
+     * @return
+     */
+    List<ZjStudent> selectAllStudent();
 }

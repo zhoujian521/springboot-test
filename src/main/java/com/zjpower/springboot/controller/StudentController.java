@@ -3,6 +3,7 @@ package com.zjpower.springboot.controller;
 import com.zjpower.springboot.dto.ResultDto;
 import com.zjpower.springboot.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +51,18 @@ public class StudentController {
             return result;
         }
         ResultDto res = studentService.uodateStuClass(stuId, oriClassId, preClassId);
+        return res;
+    }
+
+    @GetMapping("/student/batchInsertGrade")
+    public ResultDto batchInsertGrade(Integer examId) {
+        ResultDto result = new ResultDto();
+        if (Objects.isNull(examId)) {
+            result.setCode(-1016);
+            result.setMsg("参数异常：考试Id为必传参数");
+            return result;
+        }
+        ResultDto res = studentService.batchInsertGrade(examId);
         return res;
     }
 
