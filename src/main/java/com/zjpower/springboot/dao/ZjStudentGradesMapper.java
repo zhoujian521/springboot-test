@@ -4,6 +4,7 @@ import com.zjpower.springboot.entity.ZjStudentGrades;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ZjStudentGradesMapper {
     /**
@@ -55,5 +56,45 @@ public interface ZjStudentGradesMapper {
      */
     int batchInsertOrUpdateGrade(@Param("gradesList") List<ZjStudentGrades> grades);
 
+    /**
+     * 根据考试Id 查询 参加考试的学生数 班级数
+     * @param examId
+     * @return
+     */
+    Map<String, Integer> selectCountsOfTakingExamStuAndClassByExamId(Integer examId);
 
+    /**
+     * 根据考试Id 查询 全校各科的平均成绩
+     * @param examId
+     * @return
+     */
+    Map<String, Double> selectAvgGradesOfSchoolByExamId(Integer examId);
+
+    /**
+     * 根据考试Id 查询 各班级各科的平均成绩
+     * @param examId
+     * @return
+     */
+    List<Map<String, Object>> selectAvgClassGradesOfSchoolByExamId(Integer examId);
+
+    /**
+     * 根据考试Id 查询 各科的班级排名
+     * @param examId
+     * @return
+     */
+    List<Map<String, Object>> selectClassRankOfSubjectByExamId(Integer examId);
+
+    /**
+     * 根据考试Id 查询 全校考试前三名学生 总成绩 各科成绩
+     * @param examId
+     * @return
+     */
+    List<Map<String, Object>> selectTop3StuGradesByExamId(Integer examId);
+
+    /**
+     * 根据考试Id 查询 各班各科大于平均成绩的人数
+     * @param examId
+     * @return
+     */
+    List<Map<String, Integer>> selectCountGreaterAvgByExamId(Integer examId);
 }

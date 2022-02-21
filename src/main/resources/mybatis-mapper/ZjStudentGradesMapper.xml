@@ -132,4 +132,99 @@
         subject_id = values(subject_id),
         grades = values(grades)
     </insert>
+    <select id="selectCountsOfTakingExamStuAndClassByExamId" resultType="java.util.Map">
+        SELECT COUNT(DISTINCT zsg.student_id) as "countStu",
+	        COUNT(DISTINCT zs.class_id) as "countClass"
+        FROM test.zj_student_grades zsg, test.zj_student zs
+        WHERE zsg.student_id = zs.id
+            AND zsg.exam_id = #{examId,jdbcType=INTEGER}
+        GROUP BY zsg.exam_id
+    </select>
+    <select id="selectAvgGradesOfSchoolByExamId" resultType="java.util.Map">
+        SELECT CONVERT(SUM(CASE WHEN zsg.subject_id = 1 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "chinese",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 2 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "math",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 3 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "english",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 4 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "physics",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 5 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "chemistry"
+        FROM test.zj_student_grades zsg
+        WHERE zsg.exam_id = #{examId,jdbcType=INTEGER}
+        GROUP BY zsg.exam_id
+    </select>
+    <select id="selectAvgClassGradesOfSchoolByExamId" resultType="java.util.Map">
+        SELECT zs.class_id as "class_id",
+	        zsc.class_name as "class_name",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 1 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "chinese",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 2 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "math",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 3 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "english",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 4 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "physics",
+	        CONVERT(SUM(CASE WHEN zsg.subject_id = 5 THEN zsg.grades ELSE 0 END) / COUNT(CASE WHEN zsg.subject_id = 1 THEN 1 ELSE NULL END), decimal(5, 2)) as "chemistry"
+        FROM test.zj_student_grades zsg,test.zj_student zs, test.zj_student_class zsc
+        WHERE zsg.student_id = zs.id
+            AND zs.class_id = zsc.id
+            AND zsg.exam_id = #{examId,jdbcType=INTEGER}
+        GROUP BY zsg.exam_id, zs.class_id
+        ORDER BY zs.class_id
+    </select>
+    <select id="selectClassRankOfSubjectByExamId" resultType="java.util.Map">
+        SELECT 	zsg.subject_id as "subjId",
+	        zss.subject_name as "subjName",
+	        zs.class_id as "classId",
+	        zsc.class_name as "className",
+	        CONVERT(AVG(grades), decimal(5, 2)) as "avgGrade"
+        FROM test.zj_student_grades zsg
+        LEFT JOIN test.zj_student_subject zss
+	        ON zss.id = zsg.subject_id
+            ,test.zj_student zs, test.zj_student_class zsc
+        WHERE zsg.student_id = zs.id
+	        AND zs.class_id = zsc.id
+	        AND zsg.exam_id = #{examId,jdbcType=INTEGER}
+        GROUP BY zsg.exam_id, zsg.subject_id, zs.class_id
+        ORDER BY zsg.subject_id, avgGrade DESC
+    </select>
+    <select id="selectTop3StuGradesByExamId" resultType="java.util.Map">
+        SELECT zsg.student_id as "stuId",
+	        zs.student_name as "stuNmae",
+	        CONVERT(sum(zsg.grades), decimal(5, 2)) as "total",
+	        MAX(CASE WHEN zsg.subject_id = 1 THEN zsg.grades ELSE NULL END)	as "chinese",
+	        MAX(CASE WHEN zsg.subject_id = 2 THEN zsg.grades ELSE NULL END)	as "math",
+	        MAX(CASE WHEN zsg.subject_id = 3 THEN zsg.grades ELSE NULL END)	as "english",
+	        MAX(CASE WHEN zsg.subject_id = 4 THEN zsg.grades ELSE NULL END)	as "physics",
+	        MAX(CASE WHEN zsg.subject_id = 5 THEN zsg.grades ELSE NULL END)	as "chemistry"
+        FROM test.zj_student_grades zsg
+        LEFT JOIN test.zj_student zs
+	        ON zs.id = zsg.student_id
+	    WHERE zsg.exam_id = #{examId,jdbcType=INTEGER}
+        GROUP BY zsg.exam_id, zsg.student_id
+        ORDER BY total DESC
+        LIMIT 0, 3
+    </select>
+    <select id="selectCountGreaterAvgByExamId" resultType="java.util.Map">
+        SELECT temp.exam_id as examId,
+            zs.class_id as "classId",
+	        zsc.class_name as "className",
+	        temp.subCount as "countGreaterAvg"
+        FROM (
+	        SELECT avgT.exam_id,
+                zsg.student_id,
+		        COUNT(CASE WHEN zsg.grades > avgT.avgGrades THEN 1 ELSE NULL END) AS subCount
+	        FROM test.zj_student_grades zsg
+	        LEFT JOIN (
+		        SELECT zsg.exam_id,
+		            zsg.subject_id ,
+			        AVG(zsg.grades) AS avgGrades
+		        FROM test.zj_student_grades zsg
+		        WHERE zsg.exam_id = #{examId,jdbcType=INTEGER}
+		        GROUP BY zsg.exam_id, zsg.subject_id
+            ) avgT ON avgT.exam_id = zsg.exam_id
+		            AND avgT.subject_id = zsg.subject_id
+            WHERE zsg.exam_id = #{examId,jdbcType=INTEGER}
+	        GROUP BY zsg.student_id
+	        HAVING subCount > 2
+	        ) temp
+        LEFT JOIN test.zj_student zs
+            ON zs.id = temp.student_id
+	        LEFT JOIN test.zj_student_class zsc
+		        ON zsc.id = zs.class_id
+            GROUP BY zs.class_id
+    </select>
 </mapper>

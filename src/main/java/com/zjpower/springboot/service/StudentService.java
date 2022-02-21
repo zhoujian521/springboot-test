@@ -10,4 +10,6 @@ public interface StudentService {
     ResultDto uodateStuClass(Integer stuId, Integer oriClassId, Integer preClassId);
 
     ResultDto batchInsertGrade(Integer examId);
+
+    ResultDto aggregateTestData(Integer examId);
 }

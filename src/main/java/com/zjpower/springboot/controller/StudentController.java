@@ -66,7 +66,15 @@ public class StudentController {
         return res;
     }
 
-
-
-
+    @GetMapping("/student/aggregateData")
+    public ResultDto aggregateTestData(Integer examId) {
+        ResultDto result = new ResultDto();
+        if (Objects.isNull(examId)) {
+            result.setCode(-1016);
+            result.setMsg("参数异常：考试Id为必传参数");
+            return result;
+        }
+        ResultDto res = studentService.aggregateTestData(examId);
+        return res;
+    }
 }

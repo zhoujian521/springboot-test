@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -141,6 +138,34 @@ public class StudentServiceImpl implements StudentService {
         }
         int res = gradesMapper.batchInsertOrUpdateGrade(grades);
         ResultDto result = new ResultDto();
+        result.setData(res);
+        return result;
+    }
+
+    @Override
+    public ResultDto aggregateTestData(Integer examId) {
+        ResultDto result = new ResultDto();
+        // 参加考试的学生数  班级数
+        Map<String, Integer> countStusClass = gradesMapper.selectCountsOfTakingExamStuAndClassByExamId(examId);
+        // 全学校各科的平均成绩
+        Map<String, Double> avgGrades = gradesMapper.selectAvgGradesOfSchoolByExamId(examId);
+        // 各班级各科的平均成绩
+        List<Map<String, Object>> avgClassGrades = gradesMapper.selectAvgClassGradesOfSchoolByExamId(examId);
+        // 各科班级的排名
+        List<Map<String, Object>> classRank = gradesMapper.selectClassRankOfSubjectByExamId(examId);
+        // 全校考试前3名 总成绩 各科成绩
+        List<Map<String, Object>> top3StuGrades = gradesMapper.selectTop3StuGradesByExamId(examId);
+        // 各科全科大于平均成绩的人数
+        List<Map<String, Integer>> countGreaterAvg = gradesMapper.selectCountGreaterAvgByExamId(examId);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("countStusClass", countStusClass);
+        res.put("avgGrades", avgGrades);
+        res.put("avgClassGrades", avgClassGrades);
+        res.put("classRank", classRank);
+        res.put("top3StuGrades", top3StuGrades);
+        res.put("countGreaterAvg", countGreaterAvg);
+
         result.setData(res);
         return result;
     }
